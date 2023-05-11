@@ -208,7 +208,7 @@ Comment()
 // 为该列指定一个「默认值」
 Default()
 
-// 运行 NULL 值插入到该列
+// 允许 NULL 值插入到该列
 Nullable()
 ```
 
