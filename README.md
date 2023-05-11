@@ -22,14 +22,21 @@ import (
 func main() {
 	// db handle
 	var db *sql.DB
+	
 	// use goframe orm
 	db, err := g.DB().Open(g.DB().GetConfig())
+	
 	// or use gorm
 	// db, err := gorm.Open(mysql.open("..."), &gorm.Config{}).DB()
+	
+	// or use go-sql-driver/mysql
+	// import _ "github.com/go-sql-driver/mysql"
+	// db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/test")
 
 	config := &schema.Config{
-		DB:           db,
-		Prefix:       "",
+		DB:       db,
+		Database: "test",
+		Prefix:   "",
 	}
 
 	dbSchema := schema.NewSchema(context.Background(), config)
@@ -47,7 +54,7 @@ func main() {
 		table.Timestamps()
 		// create timestamp deleted_at column
 		table.SoftDeletes()
-		
+
 		// add index
 		table.Index("account")
 		// add join index

@@ -3,10 +3,12 @@ package schema
 import (
 	"context"
 	"database/sql"
+	"errors"
 )
 
 type Config struct {
 	DB           *sql.DB // database handle
+	Database     string  // current database
 	Prefix       string  // database prefix
 	Engine       string  // engin, default InnoDB
 	Charset      string  // charset, default utf8mb4
@@ -64,7 +66,11 @@ func (s *Schema) DropColumns(table string, columns ...string) error {
 
 // HasTable check table exists
 func (s *Schema) HasTable(table string) (bool, error) {
-	rows, err := s.config.DB.Query(localGrammar.CompileTableExists(), s.config.Prefix+table)
+	if s.config.Database == "" {
+		return false, errors.New("schema err: config.Database is empty")
+	}
+
+	rows, err := s.config.DB.Query(localGrammar.CompileTableExists(), s.config.Database, s.config.Prefix+table)
 	if err != nil {
 		return false, err
 	}
